@@ -4,7 +4,37 @@
 }
 
 #wrapper {
-    width: 25vw;
-    height: 25vh;
-    background: blue;
+    width: 100vw;
+    height: 100vh;
+}
+
+#header {
+    width: 100vw;
+    height: 8vh;
+    background: rgb(2,0,36);
+    background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(39,39,162,1) 36%, rgba(0,212,255,1) 100%);
+}
+
+#finder {
+    display: none;
+}
+
+@media only screen and (min-width: 768px) {
+    #wrapper {
+        width: 100vw;
+        height: 100vh;
+    }
+
+    #header {
+        width: 100vw;
+        height: 8vh;
+        background: red;
+    }
+    #finder {
+        position: absolute;
+        display: inline;
+        width: 30vw;
+        height: 92vh;
+        background: #0000ff;
+    }
 }
