@@ -1,0 +1,10 @@
+* {
+    margin: 0px;
+    padding: 0px;
+}
+
+#wrapper {
+    width: 25vw;
+    height: 25vh;
+    background: blue;
+}
