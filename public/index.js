@@ -11,7 +11,6 @@ document.addEventListener("DOMContentLoaded", e => {
     const onClickHandler = () => {
         document.addEventListener('click', e => {
             if (e.target.classList.value === "folder") {
-                clearChildNodes(taskFinder)
                 pullFolderTasks(e)
             } else if (e.target.id === "add-folder") {
                 addFolder()
@@ -52,11 +51,11 @@ document.addEventListener("DOMContentLoaded", e => {
     }
 
     const pullFolderTasks = (e) => {
+        const taskListHeader = document.getElementById("task-list-header")
+        clearChildNodes(taskListHeader)
+        clearChildNodes(taskList)
         const folderId = e.target.dataset.id
         taskList.dataset.id = folderId
-
-        const taskListHeader = document.getElementById("task-list-header")
-        console.log(taskListHeader)
         const addTaskButton = document.createElement("div")
 
         addTaskButton.dataset.id = folderId
@@ -89,7 +88,6 @@ document.addEventListener("DOMContentLoaded", e => {
     }
 
     const addFolder = () => {
-        const footer = document.getElementById("footer")
         const addFolderWrapper = document.getElementById('add-folder-wrapper')
 
         if (addFolderWrapper) {
@@ -102,8 +100,8 @@ document.addEventListener("DOMContentLoaded", e => {
             const addFolderForm = document.createElement('form')
             addFolderForm.id = "new-folder-form"
             addFolderForm.innerHTML = `
-            <input name="name" type="text" placeholder="Folder Name">
-            <input name="new-folder-submit" type="submit">
+                <input name="name" type="text" placeholder="Folder Name">
+                <input name="new-folder-submit" type="submit">
             `
             addFolderWrapper.appendChild(addFolderForm)
             footer.appendChild(addFolderWrapper)
