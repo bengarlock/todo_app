@@ -24,25 +24,32 @@
     padding: 2rem;
     background: white;
     height: 10px;
+    transition: .5s;
+    display: flex;
+}
 
+.folder:hover {
+    background: #2d7bc6;
+    transition: .5s;
 }
 
 #add-folder{
     width: 50px;
     height: 50px;
     margin-left: calc(50% - 25px);
-
 }
 
-#overlay {
-    top: 50%;
-    height: 75px;
-    background: orange;
-
+#arrow-down {
+    position: absolute;
+    border: #2b309e;
+    border-width: 0 3px 3px 0;
+    padding: 3px;
+    transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
 }
 
 
-@media only screen and (min-width: 550px) {
+@media only screen and (min-width: 786px) {
     #wrapper {
         width: 100vw;
         height: 100vh;
@@ -54,8 +61,8 @@
         min-width: 320px;
         height: 92vh;
         background: darkgrey;
+        overflow: hidden;
     }
-
     #footer {
         position: absolute;
         width: 30vw;
@@ -64,5 +71,17 @@
         background: #e5eaf8;
         top: calc(100% - 50px);
     }
-
+    #add-folder-wrapper {
+        position: absolute;
+        min-width: 288px;
+        height: 75px;
+        width: 90%;
+        margin: 20px;
+        top: -120px;
+        background: orange;
+    }
+    #delete-folder {
+        text-align: center;
+        background: pink;
+    }
 }

@@ -5,8 +5,20 @@ class FoldersController < ApplicationController
     render json: @folders
   end
 
+  def show
+    @folder = Folder.find_by(params[:id])
+    render json: @folder
+  end
+
   def create
     @folder = Folder.create(folder_params)
+    render json: @folder
+  end
+
+  def destroy
+    @folder = Folder.find_by(params[:id])
+    @folder.destroy!
+    render json:{}
   end
 
   private
