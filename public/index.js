@@ -135,7 +135,6 @@ document.addEventListener("DOMContentLoaded", e => {
             notes: e.target.notes.value,
             folder_id: folder_id
         }
-        console.log(data)
 
         const packet = {
             method: "POST",
@@ -145,7 +144,7 @@ document.addEventListener("DOMContentLoaded", e => {
             },
             body: JSON.stringify(data)
         }
-        fetch(backendUrl + "tasks/")
+        fetch(backendUrl + "tasks/", packet)
             .then(res => res.json())
             .then(console.log)
     }

@@ -30,7 +30,7 @@ class TasksController < ApplicationController
     private
 
     def task_params
-        params.require(:task).permit(:date, :name, :subject, :notes)
+        params.require(:task).permit(:date, :name, :subject, :notes, :folder_id)
     end
 
 
