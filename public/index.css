@@ -49,7 +49,7 @@
 }
 
 
-@media only screen and (min-width: 786px) {
+@media only screen and (min-width: 1068px) {
     #wrapper {
         width: 100vw;
         height: 100vh;
@@ -84,4 +84,13 @@
         text-align: center;
         background: pink;
     }
+    #task-list {
+        position: absolute;
+        width: calc(100% - 30vw);
+        min-width: 744px;
+        height: calc(100% - 8vh);
+        background: green;
+        left: 30vw;
+    }
+
 }
