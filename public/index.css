@@ -15,7 +15,7 @@
     background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(39,39,162,1) 36%, rgba(0,212,255,1) 100%);
 }
 
-#finder {
+#folder-finder {
     display: none;
 }
 
@@ -31,6 +31,15 @@
 .folder:hover {
     background: #2d7bc6;
     transition: .5s;
+}
+
+.task {
+    margin: 10px;
+    padding: 2rem;
+    background: white;
+    height: 10px;
+    transition: .5s;
+    display: flex;
 }
 
 #add-folder{
@@ -54,7 +63,7 @@
         width: 100vw;
         height: 100vh;
     }
-    #finder {
+    #folder-finder {
         position: absolute;
         display: inline;
         width: 30vw;
@@ -84,13 +93,16 @@
         text-align: center;
         background: pink;
     }
-    #task-list {
+    #task-finder {
         position: absolute;
         width: calc(100% - 30vw);
         min-width: 744px;
         height: calc(100% - 8vh);
-        background: green;
+        background: #211e7c;
         left: 30vw;
+    }
+    #task-list-header {
+        display: flex;
     }
 
 }

@@ -1,3 +1,4 @@
 class FolderSerializer < ActiveModel::Serializer
-  attributes :id, :name, :tasks, :created_at, :updated_at
+  attributes :id, :name, :created_at, :updated_at
+  has_many :tasks
 end

@@ -1,6 +1,7 @@
 const root = document.getElementById("wrapper")
 const backendUrl = "http://localhost:3000/"
-const finder = document.getElementById("finder")
+const finder = document.getElementById("folder-finder")
+const taskFinder = document.getElementById("task-finder")
 const taskList = document.getElementById("task-list")
 const footer = document.getElementById("footer")
 
@@ -10,6 +11,7 @@ document.addEventListener("DOMContentLoaded", e => {
     const onClickHandler = () => {
         document.addEventListener('click', e => {
             if (e.target.classList.value === "folder") {
+                clearChildNodes(taskFinder)
                 pullFolderTasks(e)
             } else if (e.target.id === "add-folder") {
                 addFolder()
@@ -18,11 +20,6 @@ document.addEventListener("DOMContentLoaded", e => {
             } else if (e.target.id === 'add-task-button') {
                 renderAddTaskForm(e)
             }
-            // } else {
-            //     if (document.getElementById("add-folder-wrapper")) {
-            //         footer.removeChild(document.getElementById("add-folder-wrapper"))
-            //     }
-            // }
         })
     }
 
@@ -58,15 +55,14 @@ document.addEventListener("DOMContentLoaded", e => {
         const folderId = e.target.dataset.id
         taskList.dataset.id = folderId
 
-        if (document.getElementById("add-task-div")) {
-            taskList.removeChild(document.getElementById("add-task-div"))
-        }
-
+        const taskListHeader = document.getElementById("task-list-header")
+        console.log(taskListHeader)
         const addTaskButton = document.createElement("div")
+
         addTaskButton.dataset.id = folderId
         addTaskButton.id = "add-task-div"
         addTaskButton.innerHTML = `<button id="add-task-button">Add Task</button><div>${e.target.dataset.name} Tasks</div>`
-        taskList.appendChild(addTaskButton)
+        taskListHeader.appendChild(addTaskButton)
 
         const packet = {
             method: 'GET',
@@ -75,13 +71,21 @@ document.addEventListener("DOMContentLoaded", e => {
                 "accept": "application/json",
             }
         }
+
         fetch(backendUrl + "folders/" + folderId, packet)
             .then(res => res.json())
             .then(folder => folder.tasks.map(task => renderTasks(task)))
     }
 
     const renderTasks = (task) => {
-        console.log(task)
+        const taskCard = document.createElement("div")
+        taskCard.dataset.id = task.id
+        taskCard.className = "task"
+
+        taskCard.innerHTML = `
+            <span>${task.date} ${task.name}</span><button id="delete-task">X</button>
+        `
+        taskList.appendChild(taskCard)
     }
 
     const addFolder = () => {
@@ -146,7 +150,7 @@ document.addEventListener("DOMContentLoaded", e => {
         }
         fetch(backendUrl + "tasks/", packet)
             .then(res => res.json())
-            .then(console.log)
+            .then(task => renderTasks(task))
     }
 
     const deleteFolder = (e) => {
@@ -176,6 +180,12 @@ document.addEventListener("DOMContentLoaded", e => {
         `
         form.id = "task-form"
         taskList.appendChild(form)
+    }
+
+    const clearChildNodes = (parent) => {
+        while (parent.firstChild) {
+            parent.removeChild(parent.firstChild);
+        }
     }
 
 

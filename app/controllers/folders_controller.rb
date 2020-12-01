@@ -6,7 +6,7 @@ class FoldersController < ApplicationController
   end
 
   def show
-    @folder = Folder.find_by(params[:id])
+    @folder = Folder.find(params[:id])
     render json: @folder
   end
 
