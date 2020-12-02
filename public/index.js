@@ -60,7 +60,7 @@ document.addEventListener("DOMContentLoaded", e => {
 
         addTaskButton.dataset.id = folderId
         addTaskButton.id = "add-task-div"
-        addTaskButton.innerHTML = `<button id="add-task-button">Add Task</button><div>${e.target.dataset.name} Tasks</div>`
+        addTaskButton.innerHTML = `<button id="add-task-button">Add Task</button><div>${e.target.dataset.name}</div>`
         taskListHeader.appendChild(addTaskButton)
 
         const packet = {
