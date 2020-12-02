@@ -10,7 +10,8 @@ document.addEventListener("DOMContentLoaded", e => {
 
     const onClickHandler = () => {
         document.addEventListener('click', e => {
-            if (e.target.classList.value === "folder") {
+
+            if (e.target.id === "folder-name") {
                 pullFolderTasks(e)
             } else if (e.target.id === "add-folder") {
                 addFolder()
@@ -44,7 +45,7 @@ document.addEventListener("DOMContentLoaded", e => {
     const renderFolders = (folder) => {
         const folderDiv = document.createElement('div')
         folderDiv.className = "folder"
-        folderDiv.innerHTML = `<div id="folder-name-text">${folder.name}</div><button id="delete-folder">X</button>`
+        folderDiv.innerHTML = `<div id="folder-name">${folder.name}</div><div id="delete-folder">X</div>`
         folderDiv.dataset.id = folder.id
         folderDiv.dataset.name = folder.name
         finder.appendChild(folderDiv)
@@ -54,13 +55,21 @@ document.addEventListener("DOMContentLoaded", e => {
         const taskListHeader = document.getElementById("task-list-header")
         clearChildNodes(taskListHeader)
         clearChildNodes(taskList)
-        const folderId = e.target.dataset.id
-        taskList.dataset.id = folderId
-        const addTaskButton = document.createElement("div")
 
+        const folderId = e.target.parentElement.dataset.id
+        taskList.dataset.id = e.target.parentElement.dataset.id
+
+        const addTaskButton = document.createElement("div")
         addTaskButton.dataset.id = folderId
         addTaskButton.id = "add-task-div"
-        addTaskButton.innerHTML = `<button id="add-task-button">Add Task</button><div>${e.target.dataset.name}</div>`
+        addTaskButton.innerHTML = `<button id="add-task-button">+</button>`
+        console.log(addTaskButton)
+
+        const folderHeaderName = document.createElement("div")
+        folderHeaderName.id = "folder-header-name"
+        folderHeaderName.innerHTML = `${e.target.parentElement.dataset.name}`
+
+        taskListHeader.appendChild(folderHeaderName)
         taskListHeader.appendChild(addTaskButton)
 
         const packet = {
