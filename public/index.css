@@ -67,8 +67,18 @@
     #add-folder-wrapper {
         height: 5em;
         width: 20em;
-        background: orange;
+        position: relative;
+        top: calc(100% - 200px);
+        left: 10%;
+        width: 80%;
+        background: darkcyan;
     }
+
+    #add-folder-wrapper input#name {
+        text-align: center;
+        padding: 10px;
+    }
+
 
     #task-finder {
         display: grid;
