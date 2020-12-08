@@ -7,7 +7,6 @@ const footer = document.getElementById("footer")
 
 document.addEventListener("DOMContentLoaded", e => {
 
-
     const onClickHandler = () => {
         document.addEventListener('click', e => {
             if (e.target.id === "folder-name") {
@@ -25,7 +24,6 @@ document.addEventListener("DOMContentLoaded", e => {
     const onSubmitHandler = () => {
         document.addEventListener('submit', e =>{
             e.preventDefault()
-
             if (e.target.id === "new-folder-form") {
                 postNewFolder(e)
             } else if (e.target.id === "task-form") {
@@ -42,9 +40,9 @@ document.addEventListener("DOMContentLoaded", e => {
     }
 
     const renderFolders = (folder) => {
-        const folderDiv = document.createElement('div')
+        const folderDiv = document.createElement('ul')
         folderDiv.className = "folder"
-        folderDiv.innerHTML = `<div id="folder-name">${folder.name}</div><div id="delete-folder">X</div>`
+        folderDiv.innerHTML = `<span id="folder-name">${folder.name}</span><span id="delete-folder">X</span>`
         folderDiv.dataset.id = folder.id
         folderDiv.dataset.name = folder.name
         finder.appendChild(folderDiv)
@@ -61,7 +59,7 @@ document.addEventListener("DOMContentLoaded", e => {
         const addTaskButton = document.createElement("div")
         addTaskButton.dataset.id = folderId
         addTaskButton.id = "add-task-div"
-        addTaskButton.innerHTML = `<button id="add-task-button">+ New Folder</button>`
+        addTaskButton.innerHTML = `<button id="add-task-button">+</button>`
 
         const folderHeaderName = document.createElement("div")
         folderHeaderName.id = "folder-header-name"
@@ -77,7 +75,6 @@ document.addEventListener("DOMContentLoaded", e => {
                 "accept": "application/json",
             }
         }
-
         fetch(backendUrl + "folders/" + folderId, packet)
             .then(res => res.json())
             .then(folder => folder.tasks.map(task => renderTasks(task)))
@@ -107,8 +104,8 @@ document.addEventListener("DOMContentLoaded", e => {
             const addFolderForm = document.createElement('form')
             addFolderForm.id = "new-folder-form"
             addFolderForm.innerHTML = `
-                <input id="name" name="name" type="text" placeholder="Folder Name"><br />
-                <input class="submit" name="new-folder-submit" type="submit">
+                <input id="name" autocomplete="off" name="name" type="text" placeholder="Folder Name">
+                <input id="submit" name="new-folder-submit" type="submit" value="+">
             `
             addFolderWrapper.appendChild(addFolderForm)
             footer.appendChild(addFolderWrapper)
@@ -193,10 +190,7 @@ document.addEventListener("DOMContentLoaded", e => {
         }
     }
 
-
     onSubmitHandler()
     onClickHandler()
     pullFolderData()
-
-
 })
