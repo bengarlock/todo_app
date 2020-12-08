@@ -9,14 +9,31 @@ document.addEventListener("DOMContentLoaded", e => {
 
     const onClickHandler = () => {
         document.addEventListener('click', e => {
-            if (e.target.id === "folder-name") {
-                pullFolderTasks(e)
+            if (e.target.className === "folder") {
+                if (document.getElementById("folder-selected")) {
+                    const selectedDoc = document.getElementById("folder-selected")
+                    selectedDoc.removeAttribute('id');
+                    e.target.id = "folder-selected"
+                }
+                e.target.id = "folder-selected"
+                pullFolderTasks(e.target.dataset.id)
+
             } else if (e.target.id === "add-folder") {
                 addFolder()
-            } else if (e.target.id === "delete-folder") {
+            } else if (e.target.className === "delete-folder") {
                 deleteFolder(e)
-            } else if (e.target.id === 'add-task-button') {
-                renderAddTaskForm(e)
+            } else if (e.target.id === "add-task-button") {
+                postNewTask(e)
+            } else if (e.target.className === "folder-name") {
+                const parentNode = e.target.parentElement
+                if (document.getElementById("folder-selected")) {
+                    const selectedDoc = document.getElementById("folder-selected")
+                    selectedDoc.removeAttribute('id');
+                    e.target.id = "folder-selected"
+                }
+                parentNode.removeAttribute('id')
+                parentNode.id = "folder-selected"
+                pullFolderTasks(e.target.parentElement.dataset.id)
             }
         })
     }
@@ -26,10 +43,7 @@ document.addEventListener("DOMContentLoaded", e => {
             e.preventDefault()
             if (e.target.id === "new-folder-form") {
                 postNewFolder(e)
-            } else if (e.target.id === "task-form") {
-                postNewTask(e)
             }
-
         })
     }
 
@@ -42,31 +56,37 @@ document.addEventListener("DOMContentLoaded", e => {
     const renderFolders = (folder) => {
         const folderDiv = document.createElement('ul')
         folderDiv.className = "folder"
-        folderDiv.innerHTML = `<span id="folder-name">${folder.name}</span><span id="delete-folder">X</span>`
+
+        const folderDivName = document.createElement("span")
+        folderDivName.className = "folder-name"
+        folderDivName.dataset.id = folder.id
+        folderDivName.innerHTML = `${folder.name}`
+
+        const folderDivDelete = document.createElement("span")
+        folderDivDelete.className = "delete-folder"
+        folderDivDelete.innerHTML = "X"
+
+        folderDiv.appendChild(folderDivName)
+        folderDiv.appendChild(folderDivDelete)
+
         folderDiv.dataset.id = folder.id
         folderDiv.dataset.name = folder.name
         finder.appendChild(folderDiv)
     }
 
-    const pullFolderTasks = (e) => {
+    const pullFolderTasks = (folderId) => {
         const taskListHeader = document.getElementById("task-list-header")
+        taskListHeader.dataset.id = folderId
         clearChildNodes(taskListHeader)
         clearChildNodes(taskList)
 
-        const folderId = e.target.parentElement.dataset.id
-        taskList.dataset.id = e.target.parentElement.dataset.id
+        const addTaskForm = document.createElement("form")
+        addTaskForm.innerHTML = `
+            <input type="text" name="name" id="add-task-name" autocomplete="off" placeholder="Add Task"/>
+            <input type="submit" value="+" id="add-task-button" />
+        `
 
-        const addTaskButton = document.createElement("div")
-        addTaskButton.dataset.id = folderId
-        addTaskButton.id = "add-task-div"
-        addTaskButton.innerHTML = `<button id="add-task-button">+</button>`
-
-        const folderHeaderName = document.createElement("div")
-        folderHeaderName.id = "folder-header-name"
-        folderHeaderName.innerHTML = `${e.target.parentElement.dataset.name}`
-
-        taskListHeader.appendChild(folderHeaderName)
-        taskListHeader.appendChild(addTaskButton)
+        taskListHeader.appendChild(addTaskForm)
 
         const packet = {
             method: 'GET',
@@ -81,19 +101,18 @@ document.addEventListener("DOMContentLoaded", e => {
     }
 
     const renderTasks = (task) => {
-        const taskCard = document.createElement("div")
+        const taskCard = document.createElement("ul")
         taskCard.dataset.id = task.id
-        taskCard.className = "task"
+        taskCard.className = "folder"
 
         taskCard.innerHTML = `
-            <span>${task.date} ${task.name}</span><button id="delete-task">X</button>
+            <span>${task.name}</span><span id="delete-task">X</span>
         `
         taskList.appendChild(taskCard)
     }
 
     const addFolder = () => {
         const addFolderWrapper = document.getElementById('add-folder-wrapper')
-
         if (addFolderWrapper) {
             footer.removeChild(addFolderWrapper)
         } else {
@@ -114,7 +133,6 @@ document.addEventListener("DOMContentLoaded", e => {
 
     const postNewFolder = (e) => {
         footer.removeChild(document.getElementById("add-folder-wrapper"))
-
         const folderName = e.target.querySelector("input[name='name']").value
         const data = {
             name: folderName
@@ -133,12 +151,13 @@ document.addEventListener("DOMContentLoaded", e => {
     }
 
     const postNewTask = (e) => {
-        const folder_id = e.target.parentElement.dataset.id
+        const folder_id = e.target.parentElement.parentElement.dataset.id
+
 
         const data = {
-            date: e.target.date.value,
-            name: e.target.name.value,
-            notes: e.target.notes.value,
+            date: new Date(),
+            name: e.target.parentElement.name.value,
+            notes: '',
             folder_id: folder_id
         }
 
@@ -166,22 +185,6 @@ document.addEventListener("DOMContentLoaded", e => {
             .then(() => {
                 finder.removeChild(e.target.parentElement)
             })
-    }
-
-    const renderAddTaskForm = (e) => {
-        if (document.getElementById("task-form")) {
-            taskList.removeChild(document.getElementById("task-form"))
-        }
-        const folderId = e.target.parentElement.dataset.id
-        const form = document.createElement("form")
-        form.innerHTML = `
-            <input type="date" name="date" placeholder="Date"/>
-            <input type="text" name="name" placeholder="Name">
-            <input type="text" name="notes" placeholder="Notes">
-            <input type="submit">
-        `
-        form.id = "task-form"
-        taskList.appendChild(form)
     }
 
     const clearChildNodes = (parent) => {

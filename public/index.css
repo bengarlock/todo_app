@@ -9,6 +9,7 @@
     #wrapper {
         display: grid;
         grid-template-columns: 1fr 2fr;
+        overflow: hidden;
     }
 
     #header {
@@ -30,13 +31,13 @@
         margin: auto;
         background: white;
         height: 50px;
-        transition: .5s;
+        transition: .25s;
     }
 
     .folder:hover {
-        background: #2c4bac;
+        background: #70737c;
         color: white;
-        transition: .5s;
+        transition: .25s;
     }
 
     .folder span {
@@ -46,7 +47,23 @@
         margin-left: 20px;
     }
 
-    #delete-folder {
+
+    #folder-selected {
+        margin: auto;
+        background: #2c4bac;
+        height: 50px;
+        transition: .25s;
+        color: white;
+    }
+
+    #folder-selected span {
+        display: inline-block;
+        vertical-align: middle;
+        line-height: 50px;
+        margin-left: 20px;
+    }
+
+    span.delete-folder {
         width: 50px;
         height: 50px;
         text-align: center;
@@ -67,10 +84,8 @@
     }
 
     #add-folder-wrapper {
-        display: grid;
-        grid-template-columns: 90% 10%;
         position: relative;
-        top: calc(100% - 225px);
+        top: calc(100% - 155px);
         background: darkcyan;
     }
 
@@ -94,7 +109,6 @@
     }
 
     #add-folder-wrapper input#name {
-
         border: 0px;
         width: 70%;
         text-align: center;
@@ -114,25 +128,27 @@
 
 
     #task-finder {
-        display: grid;
         grid-column: 2;
         grid-row: 2/4;
         background: #0a0686;
-        grid-gap: 1em;
-        grid-template-columns: 1fr;
+        overflow: hidden;
+        height: 700px;
     }
 
     #task-list-header {
-        display: grid;
+        display: inline;
         grid-template-columns: 20fr 0fr;
         background: #2c5cb5;
         height: 50px;
     }
 
-    #task-list-header > div {
-        text-align: center;
-        color: white;
-        align-items: stretch;
+    #task-list-header form {
+        display: inline;
+    }
+
+    .task-list {
+        overflow: hidden;
+        height: 100%;
     }
 
     #add-task-button {
@@ -159,6 +175,12 @@
 
     #folder-header-name {
         font-size: 1.25em;
+    }
+
+    #add-task-name {
+        margin-top: 0;
+        height: 50px;
+        border: none;
     }
 
 }
