@@ -9,31 +9,24 @@ document.addEventListener("DOMContentLoaded", e => {
 
     const onClickHandler = () => {
         document.addEventListener('click', e => {
-            if (e.target.className === "folder") {
-                if (document.getElementById("folder-selected")) {
-                    const selectedDoc = document.getElementById("folder-selected")
-                    selectedDoc.removeAttribute('id');
-                    e.target.id = "folder-selected"
-                }
+            if (e.target.className === "folder" || e.target.className === "folder-selected") {
+                clearSelections()
                 e.target.id = "folder-selected"
                 pullFolderTasks(e.target.dataset.id)
 
             } else if (e.target.id === "add-folder") {
                 addFolder()
             } else if (e.target.className === "delete-folder") {
-                deleteFolder(e)
+                deleteObject(e, "folders", document.getElementById("folder-finder"))
+            } else if (e.target.className === "delete-task") {
+                deleteObject(e, 'tasks', document.getElementById("task-list"))
             } else if (e.target.id === "add-task-button") {
                 postNewTask(e)
-            } else if (e.target.className === "folder-name") {
-                const parentNode = e.target.parentElement
-                if (document.getElementById("folder-selected")) {
-                    const selectedDoc = document.getElementById("folder-selected")
-                    selectedDoc.removeAttribute('id');
-                    e.target.id = "folder-selected"
-                }
-                parentNode.removeAttribute('id')
-                parentNode.id = "folder-selected"
-                pullFolderTasks(e.target.parentElement.dataset.id)
+            } else if (e.target.id === "add-task-name") {
+                try { } catch (err) { ; }
+            }
+            else {
+                clearSelections()
             }
         })
     }
@@ -77,15 +70,11 @@ document.addEventListener("DOMContentLoaded", e => {
     const pullFolderTasks = (folderId) => {
         const taskListHeader = document.getElementById("task-list-header")
         taskListHeader.dataset.id = folderId
-        clearChildNodes(taskListHeader)
-        clearChildNodes(taskList)
-
         const addTaskForm = document.createElement("form")
         addTaskForm.innerHTML = `
             <input type="text" name="name" id="add-task-name" autocomplete="off" placeholder="Add Task"/>
             <input type="submit" value="+" id="add-task-button" />
         `
-
         taskListHeader.appendChild(addTaskForm)
 
         const packet = {
@@ -101,13 +90,20 @@ document.addEventListener("DOMContentLoaded", e => {
     }
 
     const renderTasks = (task) => {
-        const taskCard = document.createElement("ul")
+        const taskCard = document.createElement("div")
         taskCard.dataset.id = task.id
-        taskCard.className = "folder"
+        taskCard.className = "task"
 
-        taskCard.innerHTML = `
-            <span>${task.name}</span><span id="delete-task">X</span>
-        `
+        const taskName = document.createElement("span")
+        taskName.textContent = task.name
+
+        const taskDelete = document.createElement("span")
+        taskDelete.className = "delete-task"
+        taskDelete.textContent = "X"
+
+        taskCard.appendChild(taskName)
+        taskCard.appendChild(taskDelete)
+
         taskList.appendChild(taskCard)
     }
 
@@ -151,14 +147,13 @@ document.addEventListener("DOMContentLoaded", e => {
     }
 
     const postNewTask = (e) => {
-        const folder_id = e.target.parentElement.parentElement.dataset.id
-
+        const folderId = e.target.parentElement.parentElement.dataset.id
 
         const data = {
             date: new Date(),
             name: e.target.parentElement.name.value,
             notes: '',
-            folder_id: folder_id
+            folder_id: folderId
         }
 
         const packet = {
@@ -174,23 +169,39 @@ document.addEventListener("DOMContentLoaded", e => {
             .then(task => renderTasks(task))
     }
 
-    const deleteFolder = (e) => {
+    const deleteObject = (e, folder, finder) => {
         const id = e.target.parentElement.dataset.id
 
+        console.log(backendUrl + folder + "/" + id)
         const packet = {
             method: "DELETE"
         }
-        fetch(backendUrl + "/folders/" + id, packet)
+        fetch(backendUrl + folder + "/" + id, packet)
             .then(res => res.json())
             .then(() => {
                 finder.removeChild(e.target.parentElement)
             })
     }
 
-    const clearChildNodes = (parent) => {
-        while (parent.firstChild) {
-            parent.removeChild(parent.firstChild);
+    const clearSelections = () => {
+        if (document.getElementById("folder-selected")) {
+            const selectedDoc = document.getElementById("folder-selected")
+            selectedDoc.removeAttribute('id');
         }
+        if (document.getElementById("task-list-header").firstChild) {
+            const taskListHeader = document.getElementById("task-list-header")
+            while (taskListHeader.firstChild) {
+                taskListHeader.removeChild(taskListHeader.lastChild)
+            }
+        }
+
+        if (document.getElementById("task-list").firstChild) {
+            const taskList = document.getElementById("task-list")
+            while (taskList.firstChild) {
+                taskList.removeChild(taskList.lastChild)
+            }
+        }
+
     }
 
     onSubmitHandler()

@@ -20,9 +20,10 @@
     }
 
     #folder-finder {
+        padding: 10px;
         grid-column: 1;
         grid-row: 2/3;
-        height: calc(100vh - 125px);
+        height: calc(100vh - 165px);
         background: darkgrey;
     }
 
@@ -128,11 +129,11 @@
 
 
     #task-finder {
+        padding: 10px;
         grid-column: 2;
-        grid-row: 2/4;
+        grid-row: 2/5;
         background: #0a0686;
         overflow: hidden;
-        height: 700px;
     }
 
     #task-list-header {
@@ -182,5 +183,32 @@
         height: 50px;
         border: none;
     }
+
+    .task {
+        display: grid;
+        grid-template-columns: 1fr 50px;
+        margin: auto;
+        background: white;
+        height: 50px;
+        transition: .25s;
+    }
+
+    .task:hover {
+        background: #70737c;
+        color: white;
+        transition: .25s;
+    }
+    .task > li {
+        text-decoration: none;
+    }
+
+    span.delete-task {
+        border: 0;
+        line-height: 50px;
+        text-align: center;
+        background-color: #a99797;
+        cursor: pointer;
+    }
+
 
 }
