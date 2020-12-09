@@ -171,8 +171,6 @@ document.addEventListener("DOMContentLoaded", e => {
 
     const deleteObject = (e, folder, finder) => {
         const id = e.target.parentElement.dataset.id
-
-        console.log(backendUrl + folder + "/" + id)
         const packet = {
             method: "DELETE"
         }
@@ -207,4 +205,5 @@ document.addEventListener("DOMContentLoaded", e => {
     onSubmitHandler()
     onClickHandler()
     pullFolderData()
+
 })
