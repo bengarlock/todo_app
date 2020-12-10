@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", e => {
     const onClickHandler = () => {
         document.addEventListener('click', e => {
 
-            console.log(e.target.id)
+            console.log(e.target.className)
 
             if (e.target.className === "folder" || e.target.className === "folder-selected") {
                 clearSelections()
@@ -32,13 +32,28 @@ document.addEventListener("DOMContentLoaded", e => {
                 e.target.parentElement.id = "task-selected"
                 pullTaskData(e)
 
-            } else if (e.target.type === "submit") {
-                console.log("goddamnit!!!")
+            } else if (e.target.id === "task-list") {
+                if (document.getElementById("task-selected")) {
+                    const taskSelected = document.getElementById("task-selected")
+                    taskSelected.id = "task"
+
+                    const taskAttributeFinder = document.getElementById("task-attribute-finder")
+                    while (taskAttributeFinder.firstChild) {
+                        taskAttributeFinder.removeChild(taskAttributeFinder.lastChild)
+                    }
+                }
+                if (document.getElementById("add-folder-wrapper")) {
+                    const footer = document.getElementById("footer")
+                    const addFolderWrapper = document.getElementById("add-folder-wrapper")
+                    footer.removeChild(addFolderWrapper)
+                }
+
+
+
             } else if (e.target.id === "task-attribute-finder" ||
                 e.target.id === "task-attribute-name" ||
                 e.target.id === "task-finder" ||
                 e.target.id === "add-task-name" ||
-                e.target.id === "task-list" ||
                 e.target.type === "text" ||
                 e.target.id === "new-folder-form" ||
                 e.target.id === "task-patch-form" ||
