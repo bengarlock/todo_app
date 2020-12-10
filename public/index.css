@@ -8,8 +8,9 @@
 @media only screen and (min-width: 786px) {
     #wrapper {
         display: grid;
-        grid-template-columns: 1fr 2fr;
+        grid-template-columns: 2fr 2fr;
         overflow: hidden;
+        transition: .5s;
     }
 
     #header {
@@ -209,6 +210,21 @@
         background-color: #a99797;
         cursor: pointer;
     }
+
+    span#task-selected.task-name {
+        background: #3149a2;
+    }
+
+    #task-attribute-finder {
+        grid-column: 3;
+        grid-row: 2/5;
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr 1fr 1fr 1fr;
+        background-color: #2eafe2;
+    }
+
+
 
 
 }

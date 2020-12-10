@@ -9,11 +9,11 @@ document.addEventListener("DOMContentLoaded", e => {
 
     const onClickHandler = () => {
         document.addEventListener('click', e => {
+
             if (e.target.className === "folder" || e.target.className === "folder-selected") {
                 clearSelections()
                 e.target.id = "folder-selected"
                 pullFolderTasks(e.target.dataset.id)
-
             } else if (e.target.id === "add-folder") {
                 addFolder()
             } else if (e.target.className === "delete-folder") {
@@ -24,8 +24,16 @@ document.addEventListener("DOMContentLoaded", e => {
                 postNewTask(e)
             } else if (e.target.id === "add-task-name") {
                 try { } catch (err) { ; }
-            }
-            else {
+            } else if (e.target.className === "task-name"){
+                if (document.getElementById("task-selected")) {
+                    const selectedTask = document.getElementById("task-selected")
+                    selectedTask.id = "task"
+                }
+                e.target.id = "task-selected"
+                pullTaskData(e)
+            } else if (e.target.id === "task-attribute-finder") {
+                console.log("tendies")
+            } else {
                 clearSelections()
             }
         })
@@ -70,11 +78,24 @@ document.addEventListener("DOMContentLoaded", e => {
     const pullFolderTasks = (folderId) => {
         const taskListHeader = document.getElementById("task-list-header")
         taskListHeader.dataset.id = folderId
+
         const addTaskForm = document.createElement("form")
-        addTaskForm.innerHTML = `
-            <input type="text" name="name" id="add-task-name" autocomplete="off" placeholder="Add Task"/>
-            <input type="submit" value="+" id="add-task-button" />
-        `
+
+        const inputName = document.createElement("input")
+        inputName.type = "text"
+        inputName.name = "name"
+        inputName.id = "add-task-name"
+        inputName.autocomplete = "off"
+        inputName.placeholder = "Add Task"
+
+        const inputSubmit = document.createElement("input")
+        inputSubmit.value = "+"
+        inputSubmit.id = "add-task-button"
+        inputSubmit.type = "submit"
+
+        addTaskForm.appendChild(inputName)
+        addTaskForm.appendChild(inputSubmit)
+
         taskListHeader.appendChild(addTaskForm)
 
         const packet = {
@@ -95,6 +116,8 @@ document.addEventListener("DOMContentLoaded", e => {
         taskCard.className = "task"
 
         const taskName = document.createElement("span")
+        taskName.className = "task-name"
+        taskName.dataset.id = task.id
         taskName.textContent = task.name
 
         const taskDelete = document.createElement("span")
@@ -182,6 +205,7 @@ document.addEventListener("DOMContentLoaded", e => {
     }
 
     const clearSelections = () => {
+
         if (document.getElementById("folder-selected")) {
             const selectedDoc = document.getElementById("folder-selected")
             selectedDoc.removeAttribute('id');
@@ -192,15 +216,51 @@ document.addEventListener("DOMContentLoaded", e => {
                 taskListHeader.removeChild(taskListHeader.lastChild)
             }
         }
-
         if (document.getElementById("task-list").firstChild) {
             const taskList = document.getElementById("task-list")
             while (taskList.firstChild) {
                 taskList.removeChild(taskList.lastChild)
             }
         }
+        const wrapper = document.getElementById("wrapper")
+        wrapper.style.gridTemplateColumns = "1fr 1fr"
+    }
+
+
+    const pullTaskData = (e) => {
+        const packet = {
+            method: "GET",
+            headers: {
+                "accept": "application/json",
+                "content-type": "application/json"
+            }
+        }
+
+        fetch(backendUrl + "tasks/" + e.target.dataset.id, packet)
+            .then(res => res.json())
+            .then(task => renderTaskAttributeFinder(task))
+    }
+
+    const renderTaskAttributeFinder = (task) => {
+        const wrapper = document.getElementById("wrapper")
+        wrapper.style.gridTemplateColumns = "1fr 1fr 1fr"
+
+        if (document.getElementById("task-attribute-finder")) {
+            const taskAttributeFinder = document.getElementById("task-attribute-finder")
+            wrapper.removeChild(taskAttributeFinder)
+        }
+        const taskAttributeFinder = document.createElement("div")
+        taskAttributeFinder.id = "task-attribute-finder"
+        wrapper.appendChild(taskAttributeFinder)
+
+        const taskAttributeTitle = document.createElement("div")
+        taskAttributeTitle.id = "task-attribute-name"
+        taskAttributeTitle.innerText = task.name
+        taskAttributeFinder.appendChild(taskAttributeTitle)
+
 
     }
+
 
     onSubmitHandler()
     onClickHandler()

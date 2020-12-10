@@ -11,18 +11,18 @@ class TasksController < ApplicationController
     end
 
     def show
-        @task = Task.find_by(params[:id])
+        @task = Task.find(params[:id])
         render json: @task
     end
 
     def update
-        @task = Task.find_by(params[:id])
+        @task = Task.find(params[:id])
         @task.update!(task_params)
         render json: @task
     end
 
     def destroy
-        @task = Task.find_by(params[:id])
+        @task = Task.find(params[:id])
         @task.destroy!
         render json:{}
     end
