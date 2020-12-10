@@ -8,9 +8,10 @@
 @media only screen and (min-width: 786px) {
     #wrapper {
         display: grid;
-        grid-template-columns: 2fr 2fr;
+        grid-template-columns: 1fr 1fr;
         overflow: hidden;
         transition: .5s;
+        height: calc(100% - 75px);
     }
 
     #header {
@@ -24,7 +25,7 @@
         padding: 10px;
         grid-column: 1;
         grid-row: 2/3;
-        height: calc(100vh - 165px);
+        height: calc(100vh - 145px);
         background: darkgrey;
     }
 
@@ -87,8 +88,24 @@
 
     #add-folder-wrapper {
         position: relative;
-        top: calc(100% - 155px);
-        background: darkcyan;
+        top: calc(100% - 150px);
+        background: #2c64b9;
+    }
+
+    #new-folder-form{
+        display: grid;
+        grid-template-columns: 1fr 0fr;
+    }
+
+    input#name {
+        position: absolute;
+        width: 100%;
+        grid-column: 1;
+        outline: 0;
+    }
+
+    #submit {
+        grid-column: 2;
     }
 
     #add-folder {
@@ -132,9 +149,8 @@
     #task-finder {
         padding: 10px;
         grid-column: 2;
-        grid-row: 2/5;
+        grid-row: 2/4;
         background: #0a0686;
-        overflow: hidden;
     }
 
     #task-list-header {
@@ -188,9 +204,7 @@
     .task {
         display: grid;
         grid-template-columns: 1fr 50px;
-        margin: auto;
         background: white;
-        height: 50px;
         transition: .25s;
     }
 
@@ -199,9 +213,7 @@
         color: white;
         transition: .25s;
     }
-    .task > li {
-        text-decoration: none;
-    }
+
 
     span.delete-task {
         border: 0;
@@ -217,11 +229,9 @@
 
     #task-attribute-finder {
         grid-column: 3;
-        grid-row: 2/5;
-        display: grid;
-        grid-template-columns: 1fr;
-        grid-template-rows: 1fr 1fr 1fr 1fr;
+        grid-row: 2/4;
         background-color: #2eafe2;
+        padding: 10px;
     }
 
     input.task-input {

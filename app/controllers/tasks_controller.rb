@@ -17,7 +17,7 @@ class TasksController < ApplicationController
 
     def update
         @task = Task.find(params[:id])
-        @task.update!(task_params)
+        @task.update(task_params)
         render json: @task
     end
 
@@ -30,7 +30,7 @@ class TasksController < ApplicationController
     private
 
     def task_params
-        params.require(:task).permit(:date, :name, :subject, :notes, :folder_id)
+        params.require(:task).permit(:date, :name, :status, :notes, :folder_id)
     end
 
 

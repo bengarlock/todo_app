@@ -24,7 +24,7 @@ document.addEventListener("DOMContentLoaded", e => {
                 deleteObject(e, 'tasks', document.getElementById("task-list"))
             } else if (e.target.id === "add-task-button") {
                 postNewTask(e)
-            } else if (e.target.className === "task-name"){
+            } else if (e.target.className === "task-name") {
                 if (document.getElementById("task-selected")) {
                     const selectedTask = document.getElementById("task-selected")
                     selectedTask.id = "task"
@@ -32,16 +32,17 @@ document.addEventListener("DOMContentLoaded", e => {
                 e.target.id = "task-selected"
                 pullTaskData(e)
 
-            //ignore list
+            } else if (e.target.type === "submit") {
+                console.log("goddamnit!!!")
             } else if (e.target.id === "task-attribute-finder" ||
                 e.target.id === "task-attribute-name" ||
                 e.target.id === "task-finder" ||
                 e.target.id === "add-task-name" ||
                 e.target.id === "task-list" ||
+                e.target.type === "text" ||
+                e.target.id === "new-folder-form" ||
+                e.target.id === "task-patch-form" ||
                 e.target.className === "task-input") {
-
-                console.log("passed")
-
             } else {
                 clearSelections()
             }
@@ -50,12 +51,10 @@ document.addEventListener("DOMContentLoaded", e => {
 
     const onSubmitHandler = () => {
         document.addEventListener('submit', e =>{
-            console.log(e.target)
             e.preventDefault()
             if (e.target.id === "new-folder-form") {
                 postNewFolder(e)
             } else if (e.target.id === "task-patch-form") {
-                console.log(e.target)
                 patchTask(e)
             }
         })
@@ -233,6 +232,22 @@ document.addEventListener("DOMContentLoaded", e => {
     }
 
     const renderTaskAttributeFinder = (task) => {
+        const formatDate = (date) => {
+            let d = new Date(date),
+                month = '' + (d.getMonth() + 1),
+                day = '' + d.getDate(),
+                year = d.getFullYear();
+
+            if (month.length < 2)
+                month = '0' + month;
+            if (day.length < 2)
+                day = '0' + day;
+
+            return String([year, month, day].join('-'));
+        }
+
+        const date = formatDate(task.date)
+
         const wrapper = document.getElementById("wrapper")
         wrapper.style.gridTemplateColumns = "1fr 1fr 1fr"
 
@@ -242,26 +257,45 @@ document.addEventListener("DOMContentLoaded", e => {
         }
         const taskAttributeFinder = document.createElement("div")
         taskAttributeFinder.id = "task-attribute-finder"
+        taskAttributeFinder.dataset.id = task.id
         wrapper.appendChild(taskAttributeFinder)
 
         const taskAttributeForm = document.createElement('form')
-        taskAttributeForm.method = "post"
-        taskAttributeForm.name = "task-patch-form"
+        taskAttributeForm.id = "task-patch-form"
                 taskAttributeForm.innerHTML = `
             <input name="name" class="task-input" type="text" value="${task.name}" placeholder="Name" required ><br />
-            <input name="date" class="task-input" type="date" value="${task.date}" placeholder="Date" ><br >
+            <input name="date" class="task-input" type="date" value="${date}" placeholder="Date" ><br >
             <input name="notes" class="task-input" type="text" value="${task.notes}" placeholder="Notes"><br />
-            <select name="status" class="task-input" type="text" value="${task.notes}" placeholder="Notes"><br />
-                <option value="not completed">Not Completed</option>
+            <select name="status" class="task-input" type="select" value="completed"><br />
+                <option value="not-completed">Not Completed</option>
                 <option value="completed">Completed</option>
             </select><br />
-            <input type="submit" class="task-input" value="Save">
+            <input type="submit" value="Save">
         `
         taskAttributeFinder.appendChild(taskAttributeForm)
     }
 
     const patchTask = (e) => {
-        console.log(e.target)
+        const form = e.target
+        const data = {
+            name: form.name.value,
+            date: form.date.value,
+            notes: form.notes.value,
+            status: form.status.value,
+        }
+
+        const packet = {
+            method: "PATCH",
+            headers: {
+                "content-type": "application/json",
+                "accept": "application/json"
+            },
+            body: JSON.stringify(data)
+        }
+
+        fetch(backendUrl + "tasks/" + e.target.parentElement.dataset.id, packet)
+            .then(res => res.json())
+            .then(console.log)
     }
 
     const clearSelections = () => {
@@ -283,11 +317,16 @@ document.addEventListener("DOMContentLoaded", e => {
             }
         }
         if (document.getElementById("task-attribute-finder")) {
-            const wrapper = document.getElementById("wrapper")
             const taskAttributeFinder = document.getElementById("task-attribute-finder")
-            wrapper.removeChild(taskAttributeFinder)
-            wrapper.style.gridTemplateColumns = "1fr 1fr"
+            root.removeChild(taskAttributeFinder)
+            root.style.gridTemplateColumns = "1fr 1fr"
         }
+        if (document.getElementById("add-folder-wrapper")) {
+            const footer = document.getElementById("footer")
+            const addFolderWrapper = document.getElementById("add-folder-wrapper")
+            footer.removeChild(addFolderWrapper)
+        }
+
     }
 
 
