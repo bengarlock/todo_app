@@ -9,6 +9,9 @@ document.addEventListener("DOMContentLoaded", e => {
 
     const onClickHandler = () => {
         document.addEventListener('click', e => {
+
+            console.log(e.target.id)
+
             if (e.target.className === "folder" || e.target.className === "folder-selected") {
                 clearSelections()
                 e.target.id = "folder-selected"
@@ -21,8 +24,6 @@ document.addEventListener("DOMContentLoaded", e => {
                 deleteObject(e, 'tasks', document.getElementById("task-list"))
             } else if (e.target.id === "add-task-button") {
                 postNewTask(e)
-            } else if (e.target.id === "add-task-name") {
-                try { } catch (err) { ; }
             } else if (e.target.className === "task-name"){
                 if (document.getElementById("task-selected")) {
                     const selectedTask = document.getElementById("task-selected")
@@ -35,8 +36,12 @@ document.addEventListener("DOMContentLoaded", e => {
             } else if (e.target.id === "task-attribute-finder" ||
                 e.target.id === "task-attribute-name" ||
                 e.target.id === "task-finder" ||
+                e.target.id === "add-task-name" ||
+                e.target.id === "task-list" ||
                 e.target.className === "task-input") {
-                console.log("tendies")
+
+                console.log("passed")
+
             } else {
                 clearSelections()
             }
@@ -45,10 +50,12 @@ document.addEventListener("DOMContentLoaded", e => {
 
     const onSubmitHandler = () => {
         document.addEventListener('submit', e =>{
+            console.log(e.target)
             e.preventDefault()
             if (e.target.id === "new-folder-form") {
                 postNewFolder(e)
             } else if (e.target.id === "task-patch-form") {
+                console.log(e.target)
                 patchTask(e)
             }
         })
@@ -238,64 +245,19 @@ document.addEventListener("DOMContentLoaded", e => {
         wrapper.appendChild(taskAttributeFinder)
 
         const taskAttributeForm = document.createElement('form')
-        taskAttributeForm.className = "task-patch-form"
+        taskAttributeForm.method = "post"
+        taskAttributeForm.name = "task-patch-form"
+                taskAttributeForm.innerHTML = `
+            <input name="name" class="task-input" type="text" value="${task.name}" placeholder="Name" required ><br />
+            <input name="date" class="task-input" type="date" value="${task.date}" placeholder="Date" ><br >
+            <input name="notes" class="task-input" type="text" value="${task.notes}" placeholder="Notes"><br />
+            <select name="status" class="task-input" type="text" value="${task.notes}" placeholder="Notes"><br />
+                <option value="not completed">Not Completed</option>
+                <option value="completed">Completed</option>
+            </select><br />
+            <input type="submit" class="task-input" value="Save">
+        `
         taskAttributeFinder.appendChild(taskAttributeForm)
-
-        const taskAttributeTitle = document.createElement("input")
-        taskAttributeTitle.id = "task-attribute-name"
-        taskAttributeTitle.className = "task-input"
-        taskAttributeTitle.type = "text"
-        taskAttributeTitle.name = "task-name"
-        taskAttributeTitle.placeholder = "Name"
-        taskAttributeTitle.value = task.name
-
-        const taskAttributeDate = document.createElement("input")
-        taskAttributeDate.id = "task-attribute-date"
-        taskAttributeDate.className = "task-input"
-        taskAttributeDate.type = "date"
-        taskAttributeDate.name = "task-date"
-        taskAttributeDate.placeholder = "Date"
-        taskAttributeDate.value = task.date
-
-        const taskAttributeNotes = document.createElement("input")
-        taskAttributeNotes.id = "task-attribute-notes"
-        taskAttributeNotes.className = "task-input"
-        taskAttributeNotes.type = "text"
-        taskAttributeNotes.name = "task-notes"
-        taskAttributeNotes.placeholder = "Notes"
-        taskAttributeNotes.value = task.notes
-
-        const taskAttributeStatus = document.createElement("select")
-        taskAttributeStatus.id = "task-attribute-status"
-        taskAttributeStatus.className = "task-input"
-        taskAttributeStatus.name = "task-status"
-        taskAttributeStatus.value = task.status
-
-        const optionNotCompleted = document.createElement("option")
-        optionNotCompleted.value = "not completed"
-        optionNotCompleted.innerText = "Not Completed"
-
-        const optionCompleted = document.createElement("option")
-        optionCompleted.value = "completed"
-        optionCompleted.innerText = "Completed"
-
-        taskAttributeStatus.append(optionNotCompleted)
-        taskAttributeStatus.append(optionCompleted)
-
-        const optionSubmit = document.createElement("input")
-        optionSubmit.type = "submit"
-        optionSubmit.id = "task-attribute-submit"
-        optionSubmit.value = "Save"
-
-        taskAttributeForm.appendChild(taskAttributeTitle)
-        taskAttributeForm.appendChild(document.createElement("br"))
-        taskAttributeForm.appendChild(taskAttributeDate)
-        taskAttributeForm.appendChild(document.createElement("br"))
-        taskAttributeForm.appendChild(taskAttributeNotes)
-        taskAttributeForm.appendChild(document.createElement("br"))
-        taskAttributeForm.appendChild(taskAttributeStatus)
-        taskAttributeForm.appendChild(document.createElement("br"))
-        taskAttributeForm.appendChild(optionSubmit)
     }
 
     const patchTask = (e) => {
