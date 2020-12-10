@@ -48,6 +48,8 @@ document.addEventListener("DOMContentLoaded", e => {
             e.preventDefault()
             if (e.target.id === "new-folder-form") {
                 postNewFolder(e)
+            } else if (e.target.id === "task-patch-form") {
+                patchTask(e)
             }
         })
     }
@@ -84,6 +86,7 @@ document.addEventListener("DOMContentLoaded", e => {
         taskListHeader.dataset.id = folderId
 
         const addTaskForm = document.createElement("form")
+        addTaskForm.id = "add-task-form"
 
         const inputName = document.createElement("input")
         inputName.type = "text"
@@ -235,10 +238,8 @@ document.addEventListener("DOMContentLoaded", e => {
         wrapper.appendChild(taskAttributeFinder)
 
         const taskAttributeForm = document.createElement('form')
-        taskAttributeForm.className = "task-input"
+        taskAttributeForm.className = "task-patch-form"
         taskAttributeFinder.appendChild(taskAttributeForm)
-
-        const space = document.createElement("br")
 
         const taskAttributeTitle = document.createElement("input")
         taskAttributeTitle.id = "task-attribute-name"
@@ -281,6 +282,11 @@ document.addEventListener("DOMContentLoaded", e => {
         taskAttributeStatus.append(optionNotCompleted)
         taskAttributeStatus.append(optionCompleted)
 
+        const optionSubmit = document.createElement("input")
+        optionSubmit.type = "submit"
+        optionSubmit.id = "task-attribute-submit"
+        optionSubmit.value = "Save"
+
         taskAttributeForm.appendChild(taskAttributeTitle)
         taskAttributeForm.appendChild(document.createElement("br"))
         taskAttributeForm.appendChild(taskAttributeDate)
@@ -288,7 +294,12 @@ document.addEventListener("DOMContentLoaded", e => {
         taskAttributeForm.appendChild(taskAttributeNotes)
         taskAttributeForm.appendChild(document.createElement("br"))
         taskAttributeForm.appendChild(taskAttributeStatus)
+        taskAttributeForm.appendChild(document.createElement("br"))
+        taskAttributeForm.appendChild(optionSubmit)
+    }
 
+    const patchTask = (e) => {
+        console.log(e.target)
     }
 
     const clearSelections = () => {
