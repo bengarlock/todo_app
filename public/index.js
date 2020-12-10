@@ -9,7 +9,6 @@ document.addEventListener("DOMContentLoaded", e => {
 
     const onClickHandler = () => {
         document.addEventListener('click', e => {
-
             if (e.target.className === "folder" || e.target.className === "folder-selected") {
                 clearSelections()
                 e.target.id = "folder-selected"
@@ -31,7 +30,12 @@ document.addEventListener("DOMContentLoaded", e => {
                 }
                 e.target.id = "task-selected"
                 pullTaskData(e)
-            } else if (e.target.id === "task-attribute-finder") {
+
+            //ignore list
+            } else if (e.target.id === "task-attribute-finder" ||
+                e.target.id === "task-attribute-name" ||
+                e.target.id === "task-finder" ||
+                e.target.className === "task-input") {
                 console.log("tendies")
             } else {
                 clearSelections()
@@ -204,29 +208,6 @@ document.addEventListener("DOMContentLoaded", e => {
             })
     }
 
-    const clearSelections = () => {
-
-        if (document.getElementById("folder-selected")) {
-            const selectedDoc = document.getElementById("folder-selected")
-            selectedDoc.removeAttribute('id');
-        }
-        if (document.getElementById("task-list-header").firstChild) {
-            const taskListHeader = document.getElementById("task-list-header")
-            while (taskListHeader.firstChild) {
-                taskListHeader.removeChild(taskListHeader.lastChild)
-            }
-        }
-        if (document.getElementById("task-list").firstChild) {
-            const taskList = document.getElementById("task-list")
-            while (taskList.firstChild) {
-                taskList.removeChild(taskList.lastChild)
-            }
-        }
-        const wrapper = document.getElementById("wrapper")
-        wrapper.style.gridTemplateColumns = "1fr 1fr"
-    }
-
-
     const pullTaskData = (e) => {
         const packet = {
             method: "GET",
@@ -253,12 +234,87 @@ document.addEventListener("DOMContentLoaded", e => {
         taskAttributeFinder.id = "task-attribute-finder"
         wrapper.appendChild(taskAttributeFinder)
 
-        const taskAttributeTitle = document.createElement("div")
+        const taskAttributeForm = document.createElement('form')
+        taskAttributeForm.className = "task-input"
+        taskAttributeFinder.appendChild(taskAttributeForm)
+
+        const space = document.createElement("br")
+
+        const taskAttributeTitle = document.createElement("input")
         taskAttributeTitle.id = "task-attribute-name"
-        taskAttributeTitle.innerText = task.name
-        taskAttributeFinder.appendChild(taskAttributeTitle)
+        taskAttributeTitle.className = "task-input"
+        taskAttributeTitle.type = "text"
+        taskAttributeTitle.name = "task-name"
+        taskAttributeTitle.placeholder = "Name"
+        taskAttributeTitle.value = task.name
 
+        const taskAttributeDate = document.createElement("input")
+        taskAttributeDate.id = "task-attribute-date"
+        taskAttributeDate.className = "task-input"
+        taskAttributeDate.type = "date"
+        taskAttributeDate.name = "task-date"
+        taskAttributeDate.placeholder = "Date"
+        taskAttributeDate.value = task.date
 
+        const taskAttributeNotes = document.createElement("input")
+        taskAttributeNotes.id = "task-attribute-notes"
+        taskAttributeNotes.className = "task-input"
+        taskAttributeNotes.type = "text"
+        taskAttributeNotes.name = "task-notes"
+        taskAttributeNotes.placeholder = "Notes"
+        taskAttributeNotes.value = task.notes
+
+        const taskAttributeStatus = document.createElement("select")
+        taskAttributeStatus.id = "task-attribute-status"
+        taskAttributeStatus.className = "task-input"
+        taskAttributeStatus.name = "task-status"
+        taskAttributeStatus.value = task.status
+
+        const optionNotCompleted = document.createElement("option")
+        optionNotCompleted.value = "not completed"
+        optionNotCompleted.innerText = "Not Completed"
+
+        const optionCompleted = document.createElement("option")
+        optionCompleted.value = "completed"
+        optionCompleted.innerText = "Completed"
+
+        taskAttributeStatus.append(optionNotCompleted)
+        taskAttributeStatus.append(optionCompleted)
+
+        taskAttributeForm.appendChild(taskAttributeTitle)
+        taskAttributeForm.appendChild(document.createElement("br"))
+        taskAttributeForm.appendChild(taskAttributeDate)
+        taskAttributeForm.appendChild(document.createElement("br"))
+        taskAttributeForm.appendChild(taskAttributeNotes)
+        taskAttributeForm.appendChild(document.createElement("br"))
+        taskAttributeForm.appendChild(taskAttributeStatus)
+
+    }
+
+    const clearSelections = () => {
+
+        if (document.getElementById("folder-selected")) {
+            const selectedDoc = document.getElementById("folder-selected")
+            selectedDoc.removeAttribute('id');
+        }
+        if (document.getElementById("task-list-header").firstChild) {
+            const taskListHeader = document.getElementById("task-list-header")
+            while (taskListHeader.firstChild) {
+                taskListHeader.removeChild(taskListHeader.lastChild)
+            }
+        }
+        if (document.getElementById("task-list").firstChild) {
+            const taskList = document.getElementById("task-list")
+            while (taskList.firstChild) {
+                taskList.removeChild(taskList.lastChild)
+            }
+        }
+        if (document.getElementById("task-attribute-finder")) {
+            const wrapper = document.getElementById("wrapper")
+            const taskAttributeFinder = document.getElementById("task-attribute-finder")
+            wrapper.removeChild(taskAttributeFinder)
+            wrapper.style.gridTemplateColumns = "1fr 1fr"
+        }
     }
 
 
