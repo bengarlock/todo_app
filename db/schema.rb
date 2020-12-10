@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_11_30_205506) do
+ActiveRecord::Schema.define(version: 2020_12_10_170331) do
 
   create_table "folders", force: :cascade do |t|
     t.string "name"
@@ -25,6 +25,7 @@ ActiveRecord::Schema.define(version: 2020_11_30_205506) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.integer "folder_id"
+    t.string "status", default: "Not Started"
   end
 
 end
