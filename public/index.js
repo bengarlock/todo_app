@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", e => {
                     const selectedTask = document.getElementById("task-selected")
                     selectedTask.id = "task"
                 }
-                e.target.id = "task-selected"
+                e.target.parentElement.id = "task-selected"
                 pullTaskData(e)
 
             } else if (e.target.type === "submit") {
@@ -249,7 +249,7 @@ document.addEventListener("DOMContentLoaded", e => {
         const date = formatDate(task.date)
 
         const wrapper = document.getElementById("wrapper")
-        wrapper.style.gridTemplateColumns = "1fr 1fr 1fr"
+        wrapper.style.gridTemplateColumns = "minmax(200px, 300px) 1fr 1fr"
 
         if (document.getElementById("task-attribute-finder")) {
             const taskAttributeFinder = document.getElementById("task-attribute-finder")
@@ -319,7 +319,7 @@ document.addEventListener("DOMContentLoaded", e => {
         if (document.getElementById("task-attribute-finder")) {
             const taskAttributeFinder = document.getElementById("task-attribute-finder")
             root.removeChild(taskAttributeFinder)
-            root.style.gridTemplateColumns = "1fr 1fr"
+            root.style.gridTemplateColumns = "minmax(200px, 300px) 1fr"
         }
         if (document.getElementById("add-folder-wrapper")) {
             const footer = document.getElementById("footer")

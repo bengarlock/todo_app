@@ -8,7 +8,7 @@
 @media only screen and (min-width: 786px) {
     #wrapper {
         display: grid;
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: minmax(200px, 300px) 1fr;
         overflow: hidden;
         transition: .5s;
         height: calc(100% - 75px);
@@ -98,8 +98,6 @@
     }
 
     input#name {
-        position: absolute;
-        width: 100%;
         grid-column: 1;
         outline: 0;
     }
@@ -129,7 +127,6 @@
 
     #add-folder-wrapper input#name {
         border: 0px;
-        width: 70%;
         text-align: center;
         height: 50px;
     }
@@ -164,7 +161,8 @@
         display: inline;
     }
 
-    .task-list {
+    #task-list {
+        margin-top: 20px;
         overflow: hidden;
         height: 100%;
     }
@@ -206,12 +204,17 @@
         grid-template-columns: 1fr 50px;
         background: white;
         transition: .25s;
+        line-height: 50px;
     }
 
     .task:hover {
         background: #70737c;
         color: white;
         transition: .25s;
+    }
+
+    .task-name {
+        margin-left: 15px;
     }
 
 
@@ -223,8 +226,15 @@
         cursor: pointer;
     }
 
-    span#task-selected.task-name {
+    #task-selected.task {
         background: #3149a2;
+        line-height: 50px;
+        margin-left: 15px;
+        color: white;
+    }
+
+    #task-selected.task span.task-name {
+        margin-left: 15px;
     }
 
     #task-attribute-finder {
@@ -236,6 +246,21 @@
 
     input.task-input {
         padding: 20px;
+    }
+
+    form#add-task-form {
+        display: grid;
+        grid-template-columns: 1fr 0fr;
+    }
+
+    input#add-task-name {
+        grid-column: 1;
+        outline: 0;
+        text-align: center;
+    }
+
+    input#add-task-button {
+        grid-column: 2;
     }
 
 
