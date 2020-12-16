@@ -20,8 +20,6 @@ document.addEventListener("DOMContentLoaded", e => {
                 clearSelections()
                 e.target.parentElement.id = "folder-selected"
                 pullFolderTasks(e.target.parentElement.dataset.id)
-
-
             } else if (e.target.id === "add-folder") {
                 addFolder()
             } else if (e.target.className === "delete-folder") {
@@ -37,7 +35,6 @@ document.addEventListener("DOMContentLoaded", e => {
                 }
                 e.target.parentElement.id = "task-selected"
                 pullTaskData(e)
-
             } else if (e.target.id === "task-list") {
                 if (document.getElementById("task-selected")) {
                     const taskSelected = document.getElementById("task-selected")
@@ -53,10 +50,8 @@ document.addEventListener("DOMContentLoaded", e => {
                     const addFolderWrapper = document.getElementById("add-folder-wrapper")
                     footer.removeChild(addFolderWrapper)
                 }
-
             } else if (e.target.id === "add-folder-button") {
                 postNewFolder(e)
-
             } else if (e.target.id === "task-attribute-finder" ||
                 e.target.id === "task-attribute-name" ||
                 e.target.id === "task-finder" ||
@@ -64,17 +59,10 @@ document.addEventListener("DOMContentLoaded", e => {
                 e.target.type === "text" ||
                 e.target.id === "task-patch-form" ||
                 e.target.className === "task-input") {
+            } else if (e.target.id === "task-patch-submit") {
+                patchTask(e)
             } else {
                 clearSelections()
-            }
-        })
-    }
-
-    const onSubmitHandler = () => {
-        document.addEventListener('submit', e =>{
-            e.preventDefault()
-            if (e.target.id === "task-patch-form") {
-                patchTask(e)
             }
         })
     }
@@ -198,7 +186,7 @@ document.addEventListener("DOMContentLoaded", e => {
             },
             body: JSON.stringify(data)
         }
-        fetch("https://database.bengarlock.com/folders/", packet)
+        fetch(backendUrl + "folders/", packet)
             .then(res => res.json())
             .then(folder => renderFolders(folder))
     }
@@ -294,13 +282,17 @@ document.addEventListener("DOMContentLoaded", e => {
                 <option value="not-completed">Not Completed</option>
                 <option value="completed">Completed</option>
             </select><br />
-            <input type="submit" value="Save">
+            <input id="task-patch-submit" type="submit" value="Save">
         `
         taskAttributeFinder.appendChild(taskAttributeForm)
     }
 
     const patchTask = (e) => {
-        const form = e.target
+        e.preventDefault()
+        const form = e.target.parentElement
+        const taskId = form.parentElement.dataset.id
+        console.log(form.name.value)
+
         const data = {
             name: form.name.value,
             date: form.date.value,
@@ -317,7 +309,7 @@ document.addEventListener("DOMContentLoaded", e => {
             body: JSON.stringify(data)
         }
 
-        fetch(backendUrl + "tasks/" + e.target.parentElement.dataset.id, packet)
+        fetch(backendUrl + "tasks/" + taskId + '/', packet)
             .then(res => res.json())
             .then(console.log)
     }
@@ -354,7 +346,6 @@ document.addEventListener("DOMContentLoaded", e => {
 
     }
 
-    onSubmitHandler()
     onClickHandler()
     pullFolderData()
 
