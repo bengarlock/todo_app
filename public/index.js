@@ -1,5 +1,5 @@
 const root = document.getElementById("wrapper")
-const backendUrl = "http://localhost:3000/"
+const backendUrl = "https://database.bengarlock.com/"
 const finder = document.getElementById("folder-finder")
 const taskFinder = document.getElementById("task-finder")
 const taskList = document.getElementById("task-list")
@@ -8,14 +8,20 @@ const footer = document.getElementById("footer")
 document.addEventListener("DOMContentLoaded", e => {
 
     const onClickHandler = () => {
+
         document.addEventListener('click', e => {
 
-            console.log(e.target.className)
-
-            if (e.target.className === "folder" || e.target.className === "folder-selected") {
+            if (e.target.className === "folder" ||
+                e.target.className === "folder-selected") {
                 clearSelections()
                 e.target.id = "folder-selected"
                 pullFolderTasks(e.target.dataset.id)
+            } else if (e.target.className === "folder-name") {
+                clearSelections()
+                e.target.parentElement.id = "folder-selected"
+                pullFolderTasks(e.target.parentElement.dataset.id)
+
+
             } else if (e.target.id === "add-folder") {
                 addFolder()
             } else if (e.target.className === "delete-folder") {
@@ -48,14 +54,14 @@ document.addEventListener("DOMContentLoaded", e => {
                     footer.removeChild(addFolderWrapper)
                 }
 
-
+            } else if (e.target.id === "add-folder-button") {
+                postNewFolder(e)
 
             } else if (e.target.id === "task-attribute-finder" ||
                 e.target.id === "task-attribute-name" ||
                 e.target.id === "task-finder" ||
                 e.target.id === "add-task-name" ||
                 e.target.type === "text" ||
-                e.target.id === "new-folder-form" ||
                 e.target.id === "task-patch-form" ||
                 e.target.className === "task-input") {
             } else {
@@ -67,9 +73,7 @@ document.addEventListener("DOMContentLoaded", e => {
     const onSubmitHandler = () => {
         document.addEventListener('submit', e =>{
             e.preventDefault()
-            if (e.target.id === "new-folder-form") {
-                postNewFolder(e)
-            } else if (e.target.id === "task-patch-form") {
+            if (e.target.id === "task-patch-form") {
                 patchTask(e)
             }
         })
@@ -171,7 +175,7 @@ document.addEventListener("DOMContentLoaded", e => {
             addFolderForm.id = "new-folder-form"
             addFolderForm.innerHTML = `
                 <input id="name" autocomplete="off" name="name" type="text" placeholder="Folder Name">
-                <input id="submit" name="new-folder-submit" type="submit" value="+">
+                <input id="add-folder-button" type="submit" value="+">
             `
             addFolderWrapper.appendChild(addFolderForm)
             footer.appendChild(addFolderWrapper)
@@ -180,7 +184,9 @@ document.addEventListener("DOMContentLoaded", e => {
 
     const postNewFolder = (e) => {
         footer.removeChild(document.getElementById("add-folder-wrapper"))
-        const folderName = e.target.querySelector("input[name='name']").value
+        const form = e.target.parentElement
+        const folderName = form.name.value
+
         const data = {
             name: folderName
         }
@@ -188,22 +194,25 @@ document.addEventListener("DOMContentLoaded", e => {
             method: "POST",
             headers: {
                 "content-type": "application/json",
-                "accepts": "application/json",
+                "accept": "application/json",
             },
             body: JSON.stringify(data)
         }
-        fetch(backendUrl + "folders/", packet)
+        fetch("https://database.bengarlock.com/folders/", packet)
             .then(res => res.json())
             .then(folder => renderFolders(folder))
     }
 
     const postNewTask = (e) => {
         const folderId = e.target.parentElement.parentElement.dataset.id
+        const form = e.target.parentElement
+        const name = form.name.value
+
+        form.reset()
 
         const data = {
             date: new Date(),
-            name: e.target.parentElement.name.value,
-            notes: '',
+            name: name,
             folder_id: folderId
         }
 
@@ -226,7 +235,6 @@ document.addEventListener("DOMContentLoaded", e => {
             method: "DELETE"
         }
         fetch(backendUrl + folder + "/" + id, packet)
-            .then(res => res.json())
             .then(() => {
                 finder.removeChild(e.target.parentElement)
             })
@@ -255,6 +263,7 @@ document.addEventListener("DOMContentLoaded", e => {
 
             if (month.length < 2)
                 month = '0' + month;
+
             if (day.length < 2)
                 day = '0' + day;
 
@@ -342,8 +351,8 @@ document.addEventListener("DOMContentLoaded", e => {
             footer.removeChild(addFolderWrapper)
         }
 
-    }
 
+    }
 
     onSubmitHandler()
     onClickHandler()
