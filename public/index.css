@@ -227,6 +227,7 @@
         text-align: center;
         background-color: #a99797;
         cursor: pointer;
+        user-select: none;
     }
 
     #task-selected.task {
