@@ -1,5 +1,5 @@
 const root = document.getElementById("wrapper")
-const backendUrl = "https://database.bengarlock.com/"
+const backendUrl = "https://bengarlock.com:8080/"
 const finder = document.getElementById("folder-finder")
 const taskFinder = document.getElementById("task-finder")
 const taskList = document.getElementById("task-list")
