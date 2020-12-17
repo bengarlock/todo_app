@@ -192,6 +192,7 @@ document.addEventListener("DOMContentLoaded", e => {
     }
 
     const postNewTask = (e) => {
+        e.preventDefault()
         const folderId = e.target.parentElement.parentElement.dataset.id
         const form = e.target.parentElement
         const name = form.name.value
