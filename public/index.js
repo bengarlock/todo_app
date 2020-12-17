@@ -15,11 +15,11 @@ document.addEventListener("DOMContentLoaded", e => {
                 e.target.className === "folder-selected") {
                 clearSelections()
                 e.target.id = "folder-selected"
-                pullFolderTasks(e.target.dataset.id)
+                pullFolderTasks(e.target.dataset)
             } else if (e.target.className === "folder-name") {
                 clearSelections()
                 e.target.parentElement.id = "folder-selected"
-                pullFolderTasks(e.target.parentElement.dataset.id)
+                pullFolderTasks(e.target.parentElement.dataset)
             } else if (e.target.id === "add-folder") {
                 addFolder()
             } else if (e.target.className === "delete-folder") {
@@ -94,9 +94,12 @@ document.addEventListener("DOMContentLoaded", e => {
         finder.appendChild(folderDiv)
     }
 
-    const pullFolderTasks = (folderId) => {
+    const pullFolderTasks = (folder) => {
+        const folderTitle = document.getElementById("folder-title")
+        folderTitle.innerText = folder.name
+
         const taskListHeader = document.getElementById("task-list-header")
-        taskListHeader.dataset.id = folderId
+        taskListHeader.dataset.id = folder.id
 
         const addTaskForm = document.createElement("form")
         addTaskForm.id = "add-task-form"
@@ -125,7 +128,7 @@ document.addEventListener("DOMContentLoaded", e => {
                 "accept": "application/json",
             }
         }
-        fetch(backendUrl + "folders/" + folderId, packet)
+        fetch(backendUrl + "folders/" + folder.id, packet)
             .then(res => res.json())
             .then(folder => folder.tasks.map(task => renderTasks(task)))
     }
@@ -142,11 +145,10 @@ document.addEventListener("DOMContentLoaded", e => {
 
         const taskDelete = document.createElement("span")
         taskDelete.className = "delete-task"
-        taskDelete.textContent = "X"
+        taskDelete.innerHTML = "X"
 
         taskCard.appendChild(taskName)
         taskCard.appendChild(taskDelete)
-
         taskList.appendChild(taskCard)
     }
 
@@ -274,12 +276,13 @@ document.addEventListener("DOMContentLoaded", e => {
         wrapper.appendChild(taskAttributeFinder)
 
         const taskAttributeForm = document.createElement('form')
+        console.log(task.status)
         taskAttributeForm.id = "task-patch-form"
                 taskAttributeForm.innerHTML = `
-            <input name="name" class="task-input" type="text" value="${task.name}" placeholder="Name" required ><br />
-            <input name="date" class="task-input" type="date" value="${date}" placeholder="Date" ><br >
-            <input name="notes" class="task-input" type="text" value="${task.notes}" placeholder="Notes"><br />
-            <select name="status" class="task-input" type="select" value="completed"><br />
+            <input name="name" class="task-input" type="text" value="${task.name}" autocomplete="off" placeholder="Name" required ><br />
+            <input name="date" class="task-input" type="date" value="${task.date}" placeholder="Date" ><br >
+            <input name="notes" class="task-input" type="text" value="${task.notes}" autocomplete="off" placeholder="Notes"><br />
+            <select name="status" class="task-input" type="select"><br />
                 <option value="not-completed">Not Completed</option>
                 <option value="completed">Completed</option>
             </select><br />
@@ -343,6 +346,10 @@ document.addEventListener("DOMContentLoaded", e => {
             const addFolderWrapper = document.getElementById("add-folder-wrapper")
             footer.removeChild(addFolderWrapper)
         }
+        // if (document.getElementById("folder-title")) {
+        //     const folderTitle = document.getElementById("folder-title")
+        //     folderTitle.remove()
+        // }
 
 
     }
