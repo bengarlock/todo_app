@@ -303,5 +303,9 @@
         grid-column: 2;
     }
 
+    input#task-patch-submit {
+        width: 100px;
+    }
+
 
 }
