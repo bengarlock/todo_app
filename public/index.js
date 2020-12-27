@@ -246,20 +246,25 @@ document.addEventListener("DOMContentLoaded", e => {
     }
 
     const renderTaskAttributeFinder = (task) => {
-        console.log(task.date)
         const formatDate = (date) => {
-            let d = new Date(date),
-                month = '' + (d.getMonth() + 1),
-                day = '' + d.getDate(),
-                year = d.getFullYear();
+
+            let d = new Date(date)
+
+            let month = String(d.getMonth() + 1)
+            let day = String(d.getDate())
+            let year = String(d.getFullYear())
+
 
             if (month.length < 2)
-                month = '0' + month;
+                month = '0' + month
 
             if (day.length < 2)
-                day = '0' + day;
+                day = '0' + day
+            console.log(day)
 
-            return [year, month, day].join('-');
+
+            const formattedDate = [year, month, day].join('-');
+            return formattedDate
         }
         formatDate(task.date)
 
@@ -310,7 +315,7 @@ document.addEventListener("DOMContentLoaded", e => {
 
         const data = {
             name: form.name.value,
-            date: form.date.value + " 06:00",
+            date: form.date.value + " 6:00",
             notes: form.notes.value,
             status: form.status.value,
         }
