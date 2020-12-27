@@ -246,6 +246,7 @@ document.addEventListener("DOMContentLoaded", e => {
     }
 
     const renderTaskAttributeFinder = (task) => {
+        console.log(task.date)
         const formatDate = (date) => {
             let d = new Date(date),
                 month = '' + (d.getMonth() + 1),
@@ -258,8 +259,10 @@ document.addEventListener("DOMContentLoaded", e => {
             if (day.length < 2)
                 day = '0' + day;
 
-            return String([year, month, day].join('-'));
+            return [year, month, day].join('-');
         }
+        formatDate(task.date)
+
         const wrapper = document.getElementById("wrapper")
         wrapper.style.gridTemplateColumns = "minmax(200px, 300px) 1fr 1fr"
 
@@ -273,11 +276,10 @@ document.addEventListener("DOMContentLoaded", e => {
         wrapper.appendChild(taskAttributeFinder)
 
         const taskAttributeForm = document.createElement('form')
-        console.log(task.status)
         taskAttributeForm.id = "task-patch-form"
                 taskAttributeForm.innerHTML = `
             <input name="name" class="task-input" type="text" value="${task.name}" autocomplete="off" placeholder="Name" required ><br />
-            <input name="date" class="task-input" type="date" value="${task.date}" placeholder="Date" ><br >
+            <input name="date" class="task-input" type="date" value="${formatDate(task.date)}" placeholder="Date" ><br >
             <input name="notes" class="task-input" type="text" value="${task.notes}" autocomplete="off" placeholder="Notes"><br />
             <select name="status" class="task-input" type="select"><br />
                 ${renderStatusDropdown(task.status)}
@@ -288,7 +290,6 @@ document.addEventListener("DOMContentLoaded", e => {
     }
 
     const renderStatusDropdown = (status) => {
-        console.log(status)
         if (status === "completed") {
             return (
             `<option value="not-completed">Not Completed</option>
@@ -306,11 +307,10 @@ document.addEventListener("DOMContentLoaded", e => {
         e.preventDefault()
         const form = e.target.parentElement
         const taskId = form.parentElement.dataset.id
-        console.log(form.name.value)
 
         const data = {
             name: form.name.value,
-            date: form.date.value,
+            date: form.date.value + " 06:00",
             notes: form.notes.value,
             status: form.status.value,
         }
