@@ -260,9 +260,6 @@ document.addEventListener("DOMContentLoaded", e => {
 
             return String([year, month, day].join('-'));
         }
-
-        const date = formatDate(task.date)
-
         const wrapper = document.getElementById("wrapper")
         wrapper.style.gridTemplateColumns = "minmax(200px, 300px) 1fr 1fr"
 
@@ -283,12 +280,26 @@ document.addEventListener("DOMContentLoaded", e => {
             <input name="date" class="task-input" type="date" value="${task.date}" placeholder="Date" ><br >
             <input name="notes" class="task-input" type="text" value="${task.notes}" autocomplete="off" placeholder="Notes"><br />
             <select name="status" class="task-input" type="select"><br />
-                <option value="not-completed">Not Completed</option>
-                <option value="completed">Completed</option>
+                ${renderStatusDropdown(task.status)}
             </select><br />
             <input id="task-patch-submit" type="submit" value="Save">
         `
         taskAttributeFinder.appendChild(taskAttributeForm)
+    }
+
+    const renderStatusDropdown = (status) => {
+        console.log(status)
+        if (status === "completed") {
+            return (
+            `<option value="not-completed">Not Completed</option>
+            <option value="completed" selected="selected">Completed</option>`
+            )
+        } else {
+            return (
+                `<option value="not-completed" selected="selected" >Not Completed</option>
+                <option value="completed">Completed</option>`
+            )
+        }
     }
 
     const patchTask = (e) => {
